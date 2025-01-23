@@ -57,6 +57,8 @@ If you want to leave the bootloader, you may send the following bytes at 57600 b
 
 Since 0.0.10, if your Windows automatically installed the driver from wch.cn for the bootloader (4348,55E0), that is fine. The current upload tool can use the default CH375 driver and co-exist with the official [WCHISPTool](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html).
 
+However, if your chip exit bootloader due to timeout before the Microsoft Windows automatical drvier installation completes, you may not have the driver installed. You can skip automatical driver installation by either install [WCHISPTool](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html) or [CH372DRV](https://www.wch.cn/downloads/CH372DRV_EXE.html).
+
 If you need to use WinUSB or libusb-win32, the tool will still work.
 
 You can use USB Serial (CDC) driver for the default CDC USB stack (1209,C550). Use [Zadig](https://zadig.akeo.ie/) to install the driver if it did not install automatically.
