@@ -261,3 +261,21 @@ ch549.menu.bootloader_pin.p15.upload.bootcfg=2
 ch549.upload.speed=1
 
 ##############################################################
+
+johnny552.name=Johnny552 (CH552P)
+
+johnny552.build.board=CH552P
+johnny552.build.mcu=ch552
+johnny552.build.core=ch55xduino
+johnny552.build.variant=johnny552
+
+johnny552.upload.tool=wchisp
+johnny552.upload.protocol=wchisp
+johnny552.upload.maximum_size=8192
+johnny552.upload.speed=9600
+
+johnny552.build.f_cpu=24000000
+johnny552.build.clock_source=internal
+johnny552.build.oscillator=internal
+
+##############################################################
