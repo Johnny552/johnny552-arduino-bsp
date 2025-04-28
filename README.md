@@ -40,6 +40,15 @@ Then upload your sketch from the Arduino IDE.
 
 Refer to the [pinout diagram](docs/johnny552-pinout.png) and [CH552 datasheet](docs/CH552DS1.pdf) for GPIO and peripheral mapping.
 
+## Documentation
+
+Comprehensive documentation is available in the [docs](docs/index.md) directory, including:
+- Complete CH55xduino Guide
+- Hardware Documentation
+- Example Projects
+- Tools and Resources
+- Programming Reference
+
 ## Credits
 
 - Based on [ch55xduino](https://github.com/DeqingSun/ch55xduino) by Deqing Sun
