@@ -70,6 +70,12 @@ The CH55xduino BSP supports several microcontrollers from the CH55x family:
 - **CH549**: Extended features (experimental)
   - Additional features for power delivery applications
 
+- **Johnny552 Development Board**:
+
+  Front View | Back View
+  :-------------------------:|:-------------------------:
+  ![Johnny552 Development Board Front](johnny552-0.1.0_front.png) | ![Johnny552 Development Board Back](johnny552-0.1.0_back.png)
+
 ## Getting Started
 
 ### Finding Examples
