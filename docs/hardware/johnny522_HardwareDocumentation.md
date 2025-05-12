@@ -20,11 +20,30 @@ Front View | Back View
 
 ## Pin Configuration
 
+For the pinout diagram and more details, visit the [Johnny552 IoT Development Board project on Hackaday](https://hackaday.io/project/202773-johnny552-iot-development-board)
+
+### Pin Mapping
+
+Arduino Pin | Port.Bit | Functions
+------------|----------|------------------
+PIN02       | P1.4     | Digital + AIN1
+PIN03       | P1.6     | Digital
+PIN04       | P1.7     | Digital
+PIN05       | P1.5     | Digital + PWM1 + AIN2
+PIN07       | P1.1     | Digital + AIN0
+PIN08       | P3.1     | Digital + PWM2
+PIN09       | P3.0     | Digital + PWM1
+PIN10       | P3.3     | Digital
+PIN11       | P3.4     | Digital + PWM2
+PIN32       | P3.2     | Digital (Tactile Switch)
+
 The Johnny552 development board exposes the CH552's GPIO pins in an Arduino-compatible layout. The board includes:
 - Digital I/O pins
-- Analog input pins
+- PWM outputs (PWM1 and PWM2)
+- Analog inputs (AIN0, AIN1, and AIN2)
 - USB connectivity
 - Power regulation
+- Built-in tactile switch on P3.2
 
 ## Getting Started with the Hardware
 

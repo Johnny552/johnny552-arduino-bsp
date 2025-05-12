@@ -31,86 +31,81 @@
 
 __code uint8_t digital_pin_to_pwm_PGM[] = {
     NOT_ON_PWM, // PIN00
-    NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM,
-    NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM,
-    NOT_ON_PWM, // not exist
-    NOT_ON_PWM, // not exist
+    NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM,  // PIN02->P1.4, PIN03->P1.6, PIN04->P1.7
+    PIN_PWM1, NOT_ON_PWM, NOT_ON_PWM,               // PIN05->P1.5 (PWM1), PIN07->P1.1
+    PIN_PWM2, PIN_PWM1,                            // PIN08->P3.1 (PWM2), PIN09->P3.0 (PWM1)
 
-    NOT_ON_PWM, // PIN10
-    NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM,
-    PIN_PWM1,   NOT_ON_PWM, NOT_ON_PWM,
-    NOT_ON_PWM, // not exist
-    NOT_ON_PWM, // not exist
+    NOT_ON_PWM, PIN_PWM2,                          // PIN10->P3.3, PIN11->P3.4 (PWM2)
+    NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM,
+    NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM,
+    NOT_ON_PWM, NOT_ON_PWM,
 
     NOT_ON_PWM, // PIN20
     NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM,
     NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM,
-    NOT_ON_PWM, // not exist
-    NOT_ON_PWM, // not exist
+    NOT_ON_PWM, NOT_ON_PWM,
 
-    PIN_PWM1_, // PIN30
-    PIN_PWM2_,  NOT_ON_PWM, NOT_ON_PWM, PIN_PWM2,
+    NOT_ON_PWM, // PIN30
+    NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM,
     NOT_ON_PWM, NOT_ON_PWM, NOT_ON_PWM,
-    NOT_ON_PWM, // not exist
-    NOT_ON_PWM, // not exist
+    NOT_ON_PWM, NOT_ON_PWM
 };
 
 __code uint8_t PROGMEM digital_pin_to_port_PGM[] = {
-    P0PORT, // PIN00
-    P0PORT,     P0PORT, P0PORT, P0PORT, P0PORT, P0PORT, P0PORT,
-    NOT_A_PORT, // not exist
-    NOT_A_PORT, // not exist
+    NOT_A_PORT, // PIN00
+    NOT_A_PORT, P1PORT, P1PORT, P1PORT,  // PIN02->P1.4, PIN03->P1.6, PIN04->P1.7
+    P1PORT, P1PORT, P1PORT,              // PIN05->P1.5, PIN07->P1.1
+    P3PORT, P3PORT,                      // PIN08->P3.1, PIN09->P3.0
 
-    P1PORT, // PIN10
-    P1PORT,     P1PORT, P1PORT, P1PORT, P1PORT, P1PORT, P1PORT,
-    NOT_A_PORT, // not exist
-    NOT_A_PORT, // not exist
+    P3PORT, P3PORT,                      // PIN10->P3.3, PIN11->P3.4
+    NOT_A_PORT, NOT_A_PORT, NOT_A_PORT,
+    NOT_A_PORT, NOT_A_PORT, NOT_A_PORT,
+    NOT_A_PORT, NOT_A_PORT,
 
-    P2PORT, // PIN20
-    P2PORT,     P2PORT, P2PORT, P2PORT, P2PORT, P2PORT, P2PORT,
-    NOT_A_PORT, // not exist
-    NOT_A_PORT, // not exist
+    NOT_A_PORT, // PIN20
+    NOT_A_PORT, NOT_A_PORT, NOT_A_PORT, NOT_A_PORT,
+    NOT_A_PORT, NOT_A_PORT, NOT_A_PORT,
+    NOT_A_PORT, NOT_A_PORT,
 
-    P3PORT, // PIN30
-    P3PORT,     P3PORT, P3PORT, P3PORT, P3PORT, P3PORT, P3PORT,
+    P3PORT, // PIN30 (P3.0)
+    P3PORT, P3PORT, P3PORT, P3PORT,     // P3.1-P3.4
+    NOT_A_PORT, NOT_A_PORT, NOT_A_PORT,
     NOT_A_PORT, // not exist
-    NOT_A_PORT, // not exist
+    NOT_A_PORT  // not exist
 };
 
 __code uint8_t digital_pin_to_bit_mask_PGM[] = {
-    _BV(0), // PIN00
-    _BV(1), _BV(2), _BV(3), _BV(4), _BV(5), _BV(6), _BV(7),
-    0, // not exist
-    0, // not exist
+    0, // PIN00
+    0, _BV(4), _BV(6), _BV(7),         // PIN02->P1.4, PIN03->P1.6, PIN04->P1.7
+    _BV(5), _BV(1), 0,                  // PIN05->P1.5, PIN07->P1.1
+    _BV(1), _BV(0),                     // PIN08->P3.1, PIN09->P3.0
 
-    _BV(0), // PIN10
-    _BV(1), _BV(2), _BV(3), _BV(4), _BV(5), _BV(6), _BV(7),
-    0, // not exist
-    0, // not exist
+    _BV(3), _BV(4),                     // PIN10->P3.3, PIN11->P3.4
+    0, 0, 0,
+    0, 0, 0,
+    0, 0,
 
-    _BV(0), // PIN20
-    _BV(1), _BV(2), _BV(3), _BV(4), _BV(5), _BV(6), _BV(7),
-    0, // not exist
-    0, // not exist
+    0, // PIN20
+    0, 0, 0, 0,
+    0, 0, 0,
+    0, 0,
 
-    _BV(0), // PIN30
-    _BV(1), _BV(2), _BV(3), _BV(4), _BV(5), _BV(6), _BV(7),
-    0, // not exist
-    0, // not exist
+    0, // PIN30
+    0, 0, 0, 0,
+    0, 0, 0,
+    0, 0
 };
 
 __code uint8_t digital_pin_to_channel_PGM[] = {
     NOT_ANALOG, // PIN00
-    NOT_ANALOG, NOT_ANALOG, NOT_ANALOG, NOT_ANALOG,
-    NOT_ANALOG, NOT_ANALOG, NOT_ANALOG,
-    NOT_ANALOG, // not exist
-    NOT_ANALOG, // not exist
+    NOT_ANALOG, 1, NOT_ANALOG, NOT_ANALOG,          // PIN02->P1.4 (AIN1), PIN03->P1.6, PIN04->P1.7
+    2,          NOT_ANALOG, 0,                      // PIN05->P1.5 (AIN2), PIN07->P1.1 (AIN0)
+    NOT_ANALOG, NOT_ANALOG,                          // PIN08->P3.1, PIN09->P3.0
 
-    NOT_ANALOG, // PIN10
-    0,          NOT_ANALOG, NOT_ANALOG, 1,
-    2,          NOT_ANALOG, NOT_ANALOG,
-    NOT_ANALOG, // not exist
-    NOT_ANALOG, // not exist
+    NOT_ANALOG, NOT_ANALOG,                          // PIN10->P3.3, PIN11->P3.4
+    NOT_ANALOG, NOT_ANALOG, NOT_ANALOG,
+    NOT_ANALOG, NOT_ANALOG, NOT_ANALOG,
+    NOT_ANALOG, NOT_ANALOG
 
     NOT_ANALOG, // PIN20
     NOT_ANALOG, NOT_ANALOG, NOT_ANALOG, NOT_ANALOG,
@@ -119,10 +114,9 @@ __code uint8_t digital_pin_to_channel_PGM[] = {
     NOT_ANALOG, // not exist
 
     NOT_ANALOG, // PIN30
-    NOT_ANALOG, 3,          NOT_ANALOG, NOT_ANALOG,
+    NOT_ANALOG, NOT_ANALOG, NOT_ANALOG, NOT_ANALOG,  // PIN32 is onboard tactile switch
     NOT_ANALOG, NOT_ANALOG, NOT_ANALOG,
-    NOT_ANALOG, // not exist
-    NOT_ANALOG, // not exist
+    NOT_ANALOG, NOT_ANALOG
 };
 
 #endif
