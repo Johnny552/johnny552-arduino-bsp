@@ -47,6 +47,33 @@ The Johnny552 development board exposes the CH552's GPIO pins in an Arduino-comp
 
 ## Getting Started with the Hardware
 
+### Installing in Arduino IDE
+
+#### 1. Install CH55x Core
+1. Open Arduino IDE
+2. Go to `File > Preferences`
+3. Add the following URL to the 'Additional Boards Manager URLs' field:
+   ```
+   https://raw.githubusercontent.com/DeqingSun/ch55xduino/ch55xduino/package_ch55xduino_mcs51_index.json
+   ```
+4. Go to `Tools > Board > Boards Manager`
+5. Search for 'ch55x'
+6. Install the 'CH55x MCS51 Boards' package
+
+#### 2. Install Johnny552 Board Support
+1. Locate your Arduino hardware folder:
+   - Windows: `%USERPROFILE%\Documents\Arduino\hardware`
+   - macOS: `~/Documents/Arduino/hardware`
+   - Linux: `~/Arduino/hardware`
+2. Create a `johnny552` folder inside the hardware folder
+3. Clone or copy this repository into that folder
+4. The final path should look like:
+   ```
+   Arduino/hardware/johnny552/ch55xduino/ch55x/variants/ch552/pins_arduino.h
+   ```
+5. Restart Arduino IDE
+6. Select `Tools > Board > Johnny552 Boards > Johnny552`
+
 ### Power Supply
 The board can be powered through:
 - USB connection
