@@ -24,23 +24,26 @@ For the pinout diagram and more details, visit the [Johnny552 IoT Development Bo
 
 ### Pin Mapping
 
-Arduino Pin | Port.Bit | Functions
-------------|----------|------------------
-PIN02       | P1.4     | Digital + AIN1
-PIN03       | P1.6     | Digital
-PIN04       | P1.7     | Digital
-PIN05       | P1.5     | Digital + PWM1 + AIN2
-PIN07       | P1.1     | Digital + AIN0
-PIN08       | P3.1     | Digital + PWM2
-PIN09       | P3.0     | Digital + PWM1
-PIN10       | P3.3     | Digital
-PIN11       | P3.4     | Digital + PWM2
-PIN32       | P3.2     | Digital (Tactile Switch)
+Arduino Pin | D Pin | A Pin | Port.Bit | Functions
+------------|-------|-------|----------|------------------
+PIN01       | -     | -     | -        | VCC (5V)
+PIN02       | D5    | A1    | P1.4     | Digital + AIN1
+PIN03       | D6    | -     | P1.6     | Digital + U1RX (UART1 Receive)
+PIN04       | D7    | -     | P1.7     | Digital + U1TX (UART1 Transmit)
+PIN05       | D8    | A2    | P1.5     | Digital + PWM1 + AIN2
+PIN07       | D0    | A0    | P1.1     | Digital + AIN0
+PIN08       | D1    | -     | P3.1     | Digital + PWM2 + U0TX (UART0 Transmit)
+PIN09       | D2    | -     | P3.0     | Digital + PWM1 + U0RX (UART0 Receive)
+PIN10       | D3    | -     | P3.3     | Digital + INT1
+PIN11       | D4    | -     | P3.4     | Digital + PWM2
+PIN12       | -     | -     | -        | GND
+PIN32       | D9    | -     | P3.2     | Digital (Tactile Switch) + INT0
 
 The Johnny552 development board exposes the CH552's GPIO pins in an Arduino-compatible layout. The board includes:
 - Digital I/O pins
 - PWM outputs (PWM1 and PWM2)
 - Analog inputs (AIN0, AIN1, and AIN2)
+- UART1 serial communication
 - USB connectivity
 - Power regulation
 - Built-in tactile switch on P3.2
@@ -97,7 +100,8 @@ To upload code to the board:
 - Digital I/O capabilities
 - PWM support on selected pins
 - Analog input support
-- I2C and SPI support
+- SPI support
+- Software I2C support (bit-banging)
 
 ## Additional Resources
 

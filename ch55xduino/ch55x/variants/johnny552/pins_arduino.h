@@ -14,9 +14,20 @@
 
 // Pin aliases for Johnny552 (based on CH552P)
 
-#define LED_BUILTIN    4     // P1.4 (connected to SK6812)
-#define PIN_BUTTON     10    // P3.3 (INT1) - user button
-#define PIN_BOOT       6     // P3.2 (INT0) - boot button
+// Button definitions
+#define PIN_BUTTON     32    // P3.2 (INT0) - user button
+//#define PIN_BOOT       6     // P3.2 (INT0) - boot button
+
+// Interrupt pin definitions
+#define INT0_PIN      32    // P3.2 - External Interrupt 0
+#define INT1_PIN      10    // P3.3 - External Interrupt 1
+
+// Arduino-style interrupt number mapping
+#define EXTERNAL_INT_0     0
+#define EXTERNAL_INT_1     1
+
+// Map digital pins to interrupt numbers (Arduino style)
+#define digitalPinToInterrupt(p) ((p) == INT0_PIN ? 0 : ((p) == INT1_PIN ? 1 : NOT_AN_INTERRUPT))
 
 // Digital pins
 #define D0  7   // P1.1
@@ -28,15 +39,25 @@
 #define D6  3   // P1.6
 #define D7  4   // P1.7
 #define D8  5   // P1.5
+#define D9  32  // P3.2
 
 // Analog pins (AINx)
 #define A0  7   // P1.1
 #define A1  2   // P1.4
 #define A2  5   // P1.5
 
-// I2C (for AHT21)
+// Software I2C pins (bit-banging, no hardware I2C support)
+// These are just suggestions for bit-banging I2C implementation
 #define SDA D6  // P1.6
 #define SCL D7  // P1.7
+
+// UART0 (Serial)
+#define PIN_SERIAL_RX  D2  // P3.0 (U0RX)
+#define PIN_SERIAL_TX  D1  // P3.1 (U0TX)
+
+// UART1 (Serial1)
+#define PIN_SERIAL1_RX D6  // P1.6 (U1RX)
+#define PIN_SERIAL1_TX D7  // P1.7 (U1TX)
 
 // SPI
 #define PIN_SPI_SS    D5   // P1.4
