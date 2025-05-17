@@ -58,8 +58,8 @@ Comprehensive documentation is available in the [docs](docs/index.md) directory,
 
 The Johnny552 Arduino BSP software is licensed under the GNU Lesser General Public License v2.1.
 
-Hardware designs are licensed under [choose appropriate license].
+Hardware designs are licensed under the GNU Lesser General Public License v2.1.
 
-Documentation is licensed under [choose appropriate license].
+Documentation is licensed under the GNU Lesser General Public License v2.1.
 
 This project is based on the CH55xduino project.
