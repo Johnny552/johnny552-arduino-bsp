@@ -38,6 +38,7 @@ PIN10       | D3    | -     | P3.3     | Digital + INT1
 PIN11       | D4    | -     | P3.4     | Digital + PWM2
 PIN12       | -     | -     | -        | GND
 PIN32       | D9    | -     | P3.2     | Digital (Tactile Switch) + INT0
+--          | -     | -     | P3.6     | BOOT
 
 The Johnny552 development board exposes the CH552's GPIO pins in an Arduino-compatible layout. The board includes:
 - Digital I/O pins
@@ -50,33 +51,6 @@ The Johnny552 development board exposes the CH552's GPIO pins in an Arduino-comp
 
 ## Getting Started with the Hardware
 
-### Installing in Arduino IDE
-
-#### 1. Install CH55x Core
-1. Open Arduino IDE
-2. Go to `File > Preferences`
-3. Add the following URL to the 'Additional Boards Manager URLs' field:
-   ```
-   https://raw.githubusercontent.com/DeqingSun/ch55xduino/ch55xduino/package_ch55xduino_mcs51_index.json
-   ```
-4. Go to `Tools > Board > Boards Manager`
-5. Search for 'ch55x'
-6. Install the 'CH55x MCS51 Boards' package
-
-#### 2. Install Johnny552 Board Support
-1. Locate your Arduino hardware folder:
-   - Windows: `%USERPROFILE%\Documents\Arduino\hardware`
-   - macOS: `~/Documents/Arduino/hardware`
-   - Linux: `~/Arduino/hardware`
-2. Create a `johnny552` folder inside the hardware folder
-3. Clone or copy this repository into that folder
-4. The final path should look like:
-   ```
-   Arduino/hardware/johnny552/ch55xduino/ch55x/variants/ch552/pins_arduino.h
-   ```
-5. Restart Arduino IDE
-6. Select `Tools > Board > Johnny552 Boards > Johnny552`
-
 ### Power Supply
 The board can be powered through:
 - USB connection
@@ -84,9 +58,9 @@ The board can be powered through:
 
 ### Programming Mode
 To upload code to the board:
-1. Hold the BOOT button
-2. Press RESET
-3. Release BOOT
+1. Hold the **BOOT** button
+2. Connect the board to USB
+3. Release the **BOOT** button
 4. Upload your code using the Arduino IDE
 
 ## Hardware Interfaces
@@ -102,12 +76,6 @@ To upload code to the board:
 - Analog input support
 - SPI support
 - Software I2C support (bit-banging)
-
-## Additional Resources
-
-- [Schematic Diagrams](schematics/)
-- [PCB Layout Files](pcb/)
-- [Component Datasheets](datasheets/)
 
 ## Troubleshooting
 

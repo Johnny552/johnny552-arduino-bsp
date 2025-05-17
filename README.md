@@ -20,7 +20,11 @@ This BSP is not yet available via Boards Manager. To install manually:
 
 1. Clone this repository into your Arduino hardware directory:
 
-mkdir -p ~/Arduino/hardware/johnny552 cd ~/Arduino/hardware/johnny552 git clone https://github.com/Johnny552/johnny552-arduino-bsp.git ch55xduino
+```bash
+mkdir -p ~/Arduino/hardware/johnny552
+cd ~/Arduino/hardware/johnny552
+git clone https://github.com/Johnny552/johnny552-arduino-bsp.git .
+```
 
 2. Restart the Arduino IDE.
 
@@ -31,28 +35,23 @@ mkdir -p ~/Arduino/hardware/johnny552 cd ~/Arduino/hardware/johnny552 git clone 
 The Johnny552 comes with a USB bootloader pre-installed. To enter bootloader mode:
 
 1. Hold the **BOOT** button
-2. Tap the **RESET** button
-3. Release **BOOT**
+2. Connect the board to USB
+3. Release the **BOOT** button
 
 Then upload your sketch from the Arduino IDE.
 
-## Pinout
-
-Refer to the [pinout diagram](docs/johnny552-pinout.png) and [CH552 datasheet](docs/CH552DS1.pdf) for GPIO and peripheral mapping.
+For more detailed instructions, see the [Arduino Installation Guide](docs/arduino/Johnny552_ArduinoInstallation.md).
 
 ## Documentation
 
-Comprehensive documentation is available in the [docs](docs/index.md) directory, including:
-- Complete CH55xduino Guide
-- Hardware Documentation
-- Example Projects
-- Tools and Resources
-- Programming Reference
+- Pin-out documentationcan be found on: [Johnny552 Project](https://hackaday.io/project/202773-johnny552-iot-development-board)
+- Hardware design: [Johnny552 Project](https://github.com/Johnny552)
+- Examples, sketches, and documentation: [Documentation](docs/index.md)
 
 ## Credits
 
 - Based on [ch55xduino](https://github.com/DeqingSun/ch55xduino) by Deqing Sun
-- Hardware design: [Johnny552 Project](https://github.com/Johnny552)
+- The Johnny552 team on [Hackaday](https://hackaday.io/project/202773-johnny552-iot-development-board)
 
 ## License
 

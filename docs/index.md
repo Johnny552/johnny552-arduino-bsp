@@ -1,34 +1,28 @@
-# CH55xduino Documentation
+# Johnny552 Documentation
 
-Welcome to the CH55xduino documentation! This documentation will help you get started with programming CH55x microcontrollers using the Arduino framework.
+Welcome to the Johnny552 documentation! This documentation will help you get started with programming the Johnny552 development board using the Arduino framework.
 
 ## Documentation Sections
 
 ### Arduino Development
-- [CH55xduino Complete Guide](arduino/CH55xduino_Documentation.md) - Comprehensive guide to CH55xduino
-- [Installation Guide](arduino/CH55xduino_Documentation.md#installation) - How to install CH55xduino
-- [Programming Reference](arduino/CH55xduino_Documentation.md#programming-reference) - API and function references
+- [Installation Guide](arduino/Johnny552_ArduinoInstallation.md) - How to install Johnny552 BSP
+- [Programming Reference](arduino/Johnny552_Documentation.md#programming-reference) - API and function references
 
 ### Hardware Documentation
 - [Johnny552 Hardware Guide](hardware/johnny522_HardwareDocumentation.md) - Complete hardware documentation
-- [Supported Hardware](arduino/CH55xduino_Documentation.md#supported-hardware) - Overview of supported microcontrollers
+- [Supported Hardware](arduino/Johnny552_Documentation.md#supported-hardware) - Overview of Johnny552 hardware
 
 ### Examples
 - [Blink LED](examples/Blink_LED_Example.md) - Basic LED blinking example
 
-### Tools and Resources
-- [Zadig Driver Installation](Zadig_CDC.png) - USB CDC driver setup
-- [Bootloader Guide](Zadig_bootloader.png) - How to use the bootloader
-- [Example Location in IDE](exampleLocation.png) - Where to find examples
-
 ## Quick Links
 
 ### Getting Started
-1. [Installation Instructions](arduino/CH55xduino_Documentation.md#installation)
-2. [First Project Setup](arduino/CH55xduino_Documentation.md#setting-up-your-first-project)
-3. [Example Projects](arduino/CH55xduino_Documentation.md#finding-examples)
+1. [Installation Instructions](arduino/Johnny552_ArduinoInstallation.md)
+2. [First Project Setup](arduino/Johnny552_Documentation.md#setting-up-your-first-project)
+3. [Example Projects](arduino/Johnny552_Documentation.md#finding-examples)
 
 ### Additional Resources
-- [GitHub Repository](https://github.com/DeqingSun/ch55xduino)
-- [Issue Tracker](https://github.com/DeqingSun/ch55xduino/issues)
-- [WCH Official Website](http://www.wch.cn/)
+- [GitHub Repository](https://github.com/Johnny552/johnny552-arduino-bsp)
+- [Johnny552 Project on Hackaday](https://hackaday.io/project/202773-johnny552-iot-development-board)
+- [Reddit Community](https://www.reddit.com/r/Johnny552)

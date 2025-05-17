@@ -45,24 +45,15 @@ To add specific support for the Johnny552 board:
      mkdir -p ~/Documents/Arduino/hardware/johnny552
      ```
 
-3. Copy the ch55xduino folder from this repository to the johnny552 folder:
-   - **Method 1 - Clone the repository and copy the folder**:
-     ```bash
-     # Clone the repository to a temporary location
-     git clone https://github.com/jeroenvanzwam/johnny552-arduino-bsp.git /tmp/johnny552-temp
-     
-     # Copy the ch55xduino folder to the Arduino hardware folder
-     cp -r /tmp/johnny552-temp/ch55xduino ~/Documents/Arduino/hardware/johnny552/
-     ```
-   
-   - **Method 2 - Download and extract**:
-     - Download the repository as a ZIP file from https://github.com/jeroenvanzwam/johnny552-arduino-bsp
-     - Extract the ZIP file
-     - Copy the "ch55xduino" folder from the extracted files to your Arduino hardware/johnny552 folder
+3. Clone Johnny552 BSP repository into the johnny552 folder:
+   ```bash
+   # Clone the repository to a temporary location
+   git clone git@github.com:Johnny552/johnny552-arduino-bsp.git
+   ```
 
 4. Verify the folder structure. The path to the pins_arduino.h file should be:
    ```
-   Arduino/hardware/johnny552/ch55xduino/ch55x/variants/johnny552/pins_arduino.h
+   ~/Documents/Arduino/hardware/johnny552/ch55x/variants/johnny552/pins_arduino.h
    ```
 
 5. Restart the Arduino IDE
@@ -89,7 +80,7 @@ To upload code to the Johnny552 board, you need to put it in programming mode:
 
 1. Connect the Johnny552 board to your computer using a USB-C cable
 2. Hold down the BOOT button on the board
-3. While holding the BOOT button, press and release the RESET button
+3. While holding the BOOT button, insert the Johnny552 board in your USB
 4. Release the BOOT button
 5. The board is now in programming mode and ready to receive code
 
