@@ -2,6 +2,8 @@
 
 This example demonstrates how to test multiple GPIO pins on the Johnny552 board using LEDs. The test program cycles through a series of green and red LEDs connected to specific pins to verify proper GPIO functionality.
 
+![Pin Test in Action](pin_test.gif)
+
 ## Hardware Requirements
 
 - 1× Johnny552 development board
