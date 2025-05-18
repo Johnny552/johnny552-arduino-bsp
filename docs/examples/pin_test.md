@@ -48,7 +48,7 @@ const int redLED_pins[] = {2, 3, 4, 5};  // 4 red LEDs
 const int redLED_count = 4;
 
 void setup() {
-  // Set all LED pins as outputs and start LOWgit merge 
+  // Set all LED pins as outputs and start LOW
   
   // Initialize green LEDs
   for (int i = 0; i < greenLED_count; i++) {
