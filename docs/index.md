@@ -13,9 +13,9 @@ Welcome to the Johnny552 documentation! This documentation will help you get sta
 - [Supported Hardware](arduino/Johnny552_Documentation.md#supported-hardware) - Overview of Johnny552 hardware
 
 ### Examples
-- [Blink LED](examples/Blink_LED_Example.md) - Basic LED blinking example
-- [Pin Test](examples/pin_test.md) - Test multiple GPIO pins with LEDs
-- [Servo Test](examples/servo_test.md) - Control multiple SG90 servo motors
+- [Blink LED](examples/blink_led/Blink_LED_Example.md) - Basic LED blinking example
+- [Pin Test](examples/pin_test/pin_test.md) - Test multiple GPIO pins with LEDs
+- [Servo Test](examples/servo_test/servo_test.md) - Control multiple SG90 servo motors
 
 ## Quick Links
 

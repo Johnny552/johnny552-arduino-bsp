@@ -8,6 +8,8 @@ This example demonstrates how to control multiple standard hobby servo motors us
 
 - 1× Johnny552 development board
 - 2× SG90 micro servo motors
+- 1× LED (for visual feedback)
+- 1× 220Ω resistor (for the LED)
 - Jumper wires
 - 5V external power supply (recommended when using multiple servos)
 
@@ -19,6 +21,7 @@ The circuit consists of:
 - Servo 2 signal wire connected to pin 11 (P3.4 - PWM2)
 - Servo power wires (usually red) connected to 5V
 - Servo ground wires (usually brown or black) connected to GND
+- LED connected to pin 7 (P1.1) through a 220Ω resistor, with the cathode (short leg) to GND
 
 ![Servo Test Circuit Diagram](servo_test_bb.png)
 
