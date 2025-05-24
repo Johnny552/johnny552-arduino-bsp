@@ -15,6 +15,7 @@ Welcome to the Johnny552 documentation! This documentation will help you get sta
 ### Examples
 - [Blink LED](examples/Blink_LED_Example.md) - Basic LED blinking example
 - [Pin Test](examples/pin_test.md) - Test multiple GPIO pins with LEDs
+- [Servo Test](examples/servo_test.md) - Control multiple SG90 servo motors
 
 ## Quick Links
 

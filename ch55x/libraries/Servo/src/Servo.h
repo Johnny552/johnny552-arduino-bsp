@@ -1,34 +1,44 @@
 /*
- * Copyright (c) 2023 by Deqing Sun <ds@thinkcreate.us> (c version for CH552
- * port) Servo library for arduino.
- *
- * This file is free software; you can redistribute it and/or modify
- * it under the terms of either the GNU General Public License version 2
- * or the GNU Lesser General Public License version 2.1, both as
- * published by the Free Software Foundation.
- */
+  Servo.h - Servo library for Johnny552 board
+  
+  This library provides servo control for the Johnny552 board
+  using direct PWM generation. It's a replacement for the standard
+  Servo library that works with the Johnny552's pin mapping.
+  
+  Created by Zwammaker, May 19, 2025
+*/
 
-#ifndef _SERVO_H_INCLUDED
-#define _SERVO_H_INCLUDED
+#ifndef SERVO_H
+#define SERVO_H
 
 #include <Arduino.h>
 
-#define MIN_PULSE_WIDTH 544      // the shortest pulse sent to a servo
-#define MAX_PULSE_WIDTH 2400     // the longest pulse sent to a servo
-#define DEFAULT_PULSE_WIDTH 1500 // default pulse width when servo is attached
+// Constants
+#define MIN_PULSE_WIDTH 544    // Minimum pulse width (0 degrees)
+#define MAX_PULSE_WIDTH 2400   // Maximum pulse width (180 degrees)
+#define DEFAULT_PULSE_WIDTH 1500 // Default pulse width (90 degrees)
+#define REFRESH_INTERVAL 20000  // 20ms refresh interval (50Hz)
+#define NUM_PULSES 10           // Number of pulses to generate per call
 
-#define MAX_SERVOS 8
+// Initialize the servo library
+void Servo_init(void);
 
-extern __xdata uint16_t Servo_min;
-extern __xdata uint16_t Servo_max;
-
-void Servo_wait_till_no_action();
-void Servo_init();
+// Attach servo to pin with default pulse width range (500-2500)
 bool Servo_attach(uint8_t pin);
-bool Servo_detach(uint8_t pin);
-bool Servo_writeMicroseconds(uint8_t pin, __xdata uint16_t pulseUs);
-// if value is < 200 its treated as an angle, otherwise as pulse width in
-// microseconds
-bool Servo_write(uint8_t pin, __xdata int16_t value);
 
-#endif
+// Attach servo to pin with custom min/max pulse width values
+bool Servo_attachMinMax(uint8_t pin, uint16_t minPulse, uint16_t maxPulse);
+
+// Detach servo
+void Servo_detach(uint8_t pin);
+
+// Write angle (0-180 degrees)
+void Servo_write(uint8_t pin, int angle);
+
+// Write pulse width in microseconds
+void Servo_writeMicroseconds(uint8_t pin, uint16_t pulseWidth);
+
+// Check if servo is attached
+bool Servo_attached(uint8_t pin);
+
+#endif // SERVO_H

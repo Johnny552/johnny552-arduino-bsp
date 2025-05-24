@@ -1,23 +1,24 @@
 # Johnny552 Servo Control Example
 
-This example demonstrates how to control a standard hobby servo motor using the Johnny552 board's PWM capabilities. The servo will sweep back and forth through its full range of motion, showing how to use the Servo library with the Johnny552 board.
+This example demonstrates how to control multiple standard hobby servo motors using the Johnny552 board's PWM capabilities. The servos will cycle through various positions (0°, 90°, 180°), showing how to use the custom Servo library with the Johnny552 board.
 
 ![Servo Test in Action](servo_test.gif)
 
 ## Hardware Requirements
 
 - 1× Johnny552 development board
-- 1× Standard hobby servo motor (e.g., SG90, MG996R)
+- 2× SG90 micro servo motors
 - Jumper wires
-- 5V external power supply (recommended for larger servos)
+- 5V external power supply (recommended when using multiple servos)
 
 ## Circuit Diagram
 
 The circuit consists of:
 
-- Servo signal wire (usually orange or yellow) connected to pin 5 (PWM1)
-- Servo power wire (usually red) connected to 5V
-- Servo ground wire (usually brown or black) connected to GND
+- Servo 1 signal wire (usually orange or yellow) connected to pin 5 (P1.5 - PWM1)
+- Servo 2 signal wire connected to pin 11 (P3.4 - PWM2)
+- Servo power wires (usually red) connected to 5V
+- Servo ground wires (usually brown or black) connected to GND
 
 ![Servo Test Circuit Diagram](servo_test_bb.png)
 
@@ -27,94 +28,154 @@ The circuit consists of:
 
 When you upload and run this example:
 
-1. The servo will first move to its center position (90°)
-2. After a brief pause, it will sweep from 0° to 180° in 5° increments
-3. Then it will sweep back from 180° to 0° in 5° increments
-4. The sequence repeats continuously
+1. The code will attempt to attach both servos and indicate success/failure with LED blinks
+2. It will then alternate between testing each servo:
+   - First servo 1, then servo 2, then back to servo 1, etc.
+3. For each servo, it will cycle through these positions:
+   - 0° (with LED on)
+   - 90° (with LED off)
+   - 180° (with LED on)
+   - Back to 90° (with LED off)
+4. The code will then switch to the other servo and repeat
 
 This test verifies that:
-- The Johnny552 can generate proper PWM signals for servo control
-- The servo responds correctly to position commands
-- The connections between the board and servo are correct
+- The Johnny552 can generate proper PWM signals for multiple servo control
+- Both servos respond correctly to position commands
+- The connections between the board and servos are correct
+- The custom pulse width settings for SG90 servos work properly
 
 ## Code Explanation
 
 ```cpp
 // Servo control example for Johnny552 board
-// Uses PWM pin 5 to control a standard hobby servo
+// Uses PWM pins 5 and 11 to control two SG90 servos
 
 #include <Servo.h>
 
-Servo myservo;  // Create servo object to control a servo
+// Pin definitions
+#define LED_PIN 7  // P1.1 (D0) - LED for visual feedback
 
-const int servoPin = 5;  // PWM pin 5 (P1.5) for servo control
-int pos = 0;             // Variable to store the servo position
+// Servo pins to test
+const int servoPin1 = 5;  // P1.5 - PWM1
+const int servoPin2 = 11; // P3.4 - PWM2
+int activeServo = 1;      // Which servo is currently being tested (1 or 2)
+int minPulseWidth = 544;  // SG90 optimal minimum pulse width
+int maxPulseWidth = 2400; // SG90 optimal maximum pulse width
+
+// Function prototypes (declarations)
+void setupServos();
+void switchActiveServo();
+
+// Function to set up both servos
+void setupServos() {
+  // Configure pins as output
+  pinMode(servoPin1, OUTPUT);
+  pinMode(servoPin2, OUTPUT);
+  
+  // Try to attach both servos with custom pulse width range
+  bool servo1Success = Servo_attachMinMax(servoPin1, minPulseWidth, maxPulseWidth);
+  bool servo2Success = Servo_attachMinMax(servoPin2, minPulseWidth, maxPulseWidth);
+  
+  // Indicate success/failure with LED patterns
+  if (servo1Success) {
+    // Servo 1 success - one blink
+    digitalWrite(LED_PIN, HIGH);
+    delay(300);
+    digitalWrite(LED_PIN, LOW);
+    delay(300);
+  } else {
+    // Servo 1 error - two rapid blinks
+    for (int i = 0; i < 2; i++) {
+      digitalWrite(LED_PIN, HIGH);
+      delay(100);
+      digitalWrite(LED_PIN, LOW);
+      delay(100);
+    }
+  }
+  
+  // Similar pattern for servo 2
+  // ...
+}
 
 void setup() {
-  // Attach the servo to the specified pin
-  myservo.attach(servoPin);
+  // Initialize the servo library
+  Servo_init();
   
-  // Move to center position and wait
-  myservo.write(90);
-  delay(1000);
+  // Set up LED for visual feedback
+  pinMode(LED_PIN, OUTPUT);
+  
+  // Configure and attach both servo pins
+  setupServos();
 }
 
 void loop() {
-  // Sweep from 0 to 180 degrees
-  for (pos = 0; pos <= 180; pos += 5) {
-    myservo.write(pos);  // Tell servo to go to position
-    delay(50);          // Wait for the servo to reach the position
-  }
+  // Get the current active pin
+  int currentPin = (activeServo == 1) ? servoPin1 : servoPin2;
   
-  delay(500);  // Pause at maximum position
+  // Test angle control sequence
+  digitalWrite(LED_PIN, HIGH);
+  Servo_write(currentPin, 0);    // Move to 0 degrees
+  delay(2000);
   
-  // Sweep from 180 to 0 degrees
-  for (pos = 180; pos >= 0; pos -= 5) {
-    myservo.write(pos);  // Tell servo to go to position
-    delay(50);          // Wait for the servo to reach the position
-  }
+  digitalWrite(LED_PIN, LOW);
+  Servo_write(currentPin, 90);   // Move to 90 degrees
+  delay(2000);
   
-  delay(500);  // Pause at minimum position
+  digitalWrite(LED_PIN, HIGH);
+  Servo_write(currentPin, 180);  // Move to 180 degrees
+  delay(2000);
+  
+  digitalWrite(LED_PIN, LOW);
+  Servo_write(currentPin, 90);   // Return to center
+  delay(2000);
+  
+  // Switch to the other servo
+  switchActiveServo();
 }
 ```
 
 ## Key Concepts
 
-1. **Servo Library**: The example uses the standard Arduino Servo library, which is compatible with the Johnny552 board.
-2. **PWM Control**: Servos are controlled by sending precise PWM (Pulse Width Modulation) signals, which the Johnny552 can generate on its PWM-capable pins.
-3. **Angle Control**: The `write()` function sets the servo angle between 0° and 180°.
-4. **Timing**: Proper delays are important to allow the servo time to reach its target position.
+1. **Custom Servo Library**: The example uses the Johnny552's custom Servo library with C-style function calls.
+2. **Multiple Servo Control**: The code demonstrates controlling multiple servos simultaneously.
+3. **Optimized Pulse Widths**: Uses custom pulse width values (544-2400μs) optimized for SG90 servos.
+4. **Angle Control**: The `Servo_write()` function sets the servo angle between 0° and 180°.
+5. **Visual Feedback**: Uses the onboard LED to indicate which servo is active and what position it's moving to.
 
 ## How Servos Work
 
 Standard hobby servos operate based on PWM signals with the following characteristics:
 
-- Pulse width of 1.0ms corresponds to 0° position
-- Pulse width of 1.5ms corresponds to 90° position (center)
-- Pulse width of 2.0ms corresponds to 180° position
+- For SG90 servos:
+  - Pulse width of 0.544ms corresponds to 0° position
+  - Pulse width of 1.5ms corresponds to 90° position (center)
+  - Pulse width of 2.4ms corresponds to 180° position
 - The pulse is typically repeated every 20ms (50Hz)
 
-The Arduino Servo library handles these timing details automatically, converting angle values (0-180) to the appropriate pulse widths.
+The custom Servo library handles these timing details automatically, converting angle values (0-180) to the appropriate pulse widths for each servo.
+
+The Johnny552's custom Servo library handles these timing details automatically, converting angle values (0-180) to the appropriate pulse widths based on each servo's configured min/max values.
 
 ## Troubleshooting
 
-If the servo doesn't move as expected:
+If the servos don't move as expected:
 
-1. **Check Connections**: Verify the signal wire is connected to the correct PWM pin (pin 5)
-2. **Power Issues**: Ensure the servo has adequate power. The Johnny552's USB power might be insufficient for larger servos
-3. **Servo Library**: Make sure the Servo library is properly installed
-4. **Servo Limits**: Some servos may have mechanical limits that prevent full 0-180° rotation
-5. **PWM Frequency**: If the servo jitters, the PWM frequency might need adjustment
+1. **Check Connections**: Verify the signal wires are connected to the correct PWM pins (5 and 11)
+2. **Power Issues**: Ensure the servos have adequate power. The Johnny552's USB power might be insufficient for multiple servos
+3. **LED Feedback**: Watch the LED blink patterns to confirm if servo attachment was successful
+4. **Pulse Width Range**: If servos grind or jitter, you may need to adjust the min/max pulse width values
+5. **Servo Limits**: Some servos may have mechanical limits that prevent full 0-180° rotation
 
 ## Extending the Example
 
 Here are some ways to modify this example:
 
-1. **Button Control**: Use the onboard button to change servo positions
-2. **Multiple Servos**: Control multiple servos by attaching them to different PWM pins (8, 9, or 11)
-3. **Smooth Movement**: Implement easing functions for smoother servo movement
-4. **Position Feedback**: Add position feedback using the AHT21 sensor or other input
-5. **Precise Timing**: Implement more precise timing control for specific applications
+1. **Button Control**: Use the onboard button to change servo positions or select which servo to control
+2. **More Servos**: Add more servos (up to 8 total with the current library)
+3. **Smooth Movement**: Implement easing functions for smoother servo movement between positions
+4. **Synchronized Movement**: Create patterns where both servos move in coordination
+5. **Different Servo Types**: Use the `Servo_attachMinMax()` function to support different servo models with their own pulse width requirements
+6. **Position Feedback**: Add position feedback using the AHT21 sensor or other input
 
 ## Related Examples
 
