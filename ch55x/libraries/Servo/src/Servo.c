@@ -1,187 +1,162 @@
 /*
- * Copyright (c) 2023 by Deqing Sun <ds@thinkcreate.us> (c version for CH552
- * port) Servo library for arduino.
- *
- * This file is free software; you can redistribute it and/or modify
- * it under the terms of either the GNU General Public License version 2
- * or the GNU Lesser General Public License version 2.1, both as
- * published by the Free Software Foundation.
- */
+  Servo.cpp - Servo library for Johnny552 board
+  
+  This library provides servo control for the Johnny552 board
+  using direct PWM generation. It's a replacement for the standard
+  Servo library that works with the Johnny552's pin mapping.
+  
+  Created by Zwammaker, May 19, 2025
+*/
 
 #include "Servo.h"
 
-void digitalWriteHighDirectLut(uint8_t pin);
-void digitalWriteLowDirectLut(uint8_t pin);
+// Maximum number of servos
+#define MAX_SERVOS 8
 
-#if F_CPU > 24000000
-#error Current clock is too fast for this version of library. Please use 24M or lower.
-#endif
+// Servo data structure
+typedef struct {
+  uint8_t pin;          // Pin connected to servo
+  uint16_t pulseWidth;  // Current pulse width
+  uint16_t minPulse;    // Minimum pulse width for this servo
+  uint16_t maxPulse;    // Maximum pulse width for this servo
+  bool attached;        // True if servo is attached
+} servo_t;
 
-// each 5536 is 60000tick, 2.5ms in 24MHz
-volatile __xdata uint16_t listRCAP2[16] = {5536, 5536, 5536, 5536,
-                                           5536, 5536, 5536, 5536};
-volatile __xdata uint8_t listRCAP2Ptr = 0;
-volatile __xdata uint8_t listRCAP2Limit = (8 + 0);
-//*8 *9 pin not exist
-volatile __xdata uint8_t servoPin[16] = {9, 9, 9, 9, 9, 9, 9, 9};
-volatile __xdata uint8_t servoPinNext = 9;
-volatile __xdata uint8_t servoPinPrevious = 9;
+// Array of servo data
+static servo_t servos[MAX_SERVOS];
 
-__xdata uint16_t Servo_min = 1000;
-__xdata uint16_t Servo_max = 2000;
-
-void Timer2Interrupt(void) __interrupt {
-  if (TF2) {
-    TF2 = 0;
-
-    __idata uint8_t listRCAP2PtrCache = listRCAP2Ptr;
-    __idata uint16_t listRCAP2Cache = listRCAP2[listRCAP2PtrCache];
-
-    RCAP2L = listRCAP2Cache & 0xff;
-    RCAP2H = listRCAP2Cache >> 8;
-
-    __idata uint8_t nextPinCache = servoPinNext;
-    __idata uint8_t previousPinCache = servoPinPrevious;
-
-    digitalWriteLowDirectLut(previousPinCache);
-    digitalWriteHighDirectLut(nextPinCache);
-    servoPinPrevious = nextPinCache;
-    servoPinNext = servoPin[listRCAP2PtrCache];
-
-    listRCAP2PtrCache++;
-    if (listRCAP2PtrCache >= listRCAP2Limit) {
-      listRCAP2PtrCache = 0;
-    }
-
-    listRCAP2Ptr = listRCAP2PtrCache;
+// Generate a servo pulse
+static void generatePulse(uint8_t pin, uint16_t pulseWidth) {
+  // Generate multiple pulses to ensure servo has time to respond
+  for (int i = 0; i < NUM_PULSES; i++) {
+    digitalWrite(pin, HIGH);
+    delayMicroseconds(pulseWidth);
+    digitalWrite(pin, LOW);
+    delayMicroseconds(REFRESH_INTERVAL - pulseWidth);
   }
 }
 
-void Servo_wait_till_no_action() {
-  while (1) {
-    ET2 = 0;
-    __idata uint8_t listRCAP2PtrCache = listRCAP2Ptr;
-    ET2 = 1;
-    if (listRCAP2PtrCache < 7) {
-      break;
-    }
+// Initialize the servo library
+void Servo_init(void) {
+  // Initialize all servos as detached
+  for (int i = 0; i < MAX_SERVOS; i++) {
+    servos[i].attached = false;
+    servos[i].pulseWidth = DEFAULT_PULSE_WIDTH;
+    servos[i].minPulse = MIN_PULSE_WIDTH;
+    servos[i].maxPulse = MAX_PULSE_WIDTH;
   }
 }
 
-void Servo_init() {
-  listRCAP2Limit = 8;
-  __idata uint16_t valueRCAP2_2_5ms = (65536 - F_CPU * 0.0025);
-  for (__idata uint8_t i = 0; i < 8; i++) {
-    listRCAP2[i] = valueRCAP2_2_5ms;
-  }
-  for (__idata uint8_t i = 0; i < 8; i++) {
-    servoPin[i] = 9;
-  }
-
-  T2CON = 0x00;
-  // bTMR_CLK may be set by uart0, we keep it as is.
-  T2MOD |= bTMR_CLK | bT2_CLK; // use Fsys for T2
-
-  TL2 = 0;
-  TH2 = 0;
-  RCAP2L = 0;
-  RCAP2H = 0;
-
-  ET2 = 1;
-
-  TR2 = 1;
-}
-
-uint8_t Servo_search_pin(uint8_t pin) {
-  __idata uint8_t listRCAP2LimitCache = listRCAP2Limit;
-  for (__idata uint8_t i = 8; i < listRCAP2LimitCache; i++) {
-    if (servoPin[i] == pin) {
+// Find an available servo slot
+static int findFreeServo(void) {
+  for (int i = 0; i < MAX_SERVOS; i++) {
+    if (!servos[i].attached) {
       return i;
     }
   }
-  return 0;
+  return -1; // No free slots
 }
 
+// Find a servo by pin
+static int findServoByPin(uint8_t pin) {
+  for (int i = 0; i < MAX_SERVOS; i++) {
+    if (servos[i].attached && servos[i].pin == pin) {
+      return i;
+    }
+  }
+  return -1; // Not found
+}
+
+// Attach servo to pin
 bool Servo_attach(uint8_t pin) {
-  if (pin > 37) {
-    return false;
+  int servoIndex = findFreeServo();
+  if (servoIndex < 0) {
+    return false; // No free slots
   }
-  __idata uint8_t pinMod10 = pin % 10;
-  if (pinMod10 == 9) {
-    return false;
-  }
-  if (pinMod10 == 8) {
-    return false;
-  }
-  if (listRCAP2Limit >= 16) {
-    return false;
-  }
-  if (Servo_search_pin(pin) != 0) {
-    return false;
-  }
-  Servo_wait_till_no_action();
-  __idata uint16_t valueRCAP2_1_5ms = (65536 - F_CPU * 0.0015);
-  __idata uint8_t listRCAP2LimitCache = listRCAP2Limit;
-  servoPin[listRCAP2LimitCache] = pin;
-  listRCAP2[listRCAP2LimitCache] = valueRCAP2_1_5ms;
-  listRCAP2LimitCache++;
-  listRCAP2Limit = listRCAP2LimitCache;
+  
+  // Configure pin
+  pinMode(pin, OUTPUT);
+  
+  // Store servo data
+  servos[servoIndex].pin = pin;
+  servos[servoIndex].pulseWidth = DEFAULT_PULSE_WIDTH;
+  servos[servoIndex].minPulse = MIN_PULSE_WIDTH;
+  servos[servoIndex].maxPulse = MAX_PULSE_WIDTH;
+  servos[servoIndex].attached = true;
+  
+  // Move to default position (90 degrees)
+  generatePulse(pin, DEFAULT_PULSE_WIDTH);
+  
   return true;
 }
 
-bool Servo_detach(uint8_t pin) {
-  __idata uint8_t pinIndex = Servo_search_pin(pin);
-  if (pinIndex == 0) {
-    return false;
+// Attach servo to pin with custom min/max pulse width values
+bool Servo_attachMinMax(uint8_t pin, uint16_t minPulse, uint16_t maxPulse) {
+  int servoIndex = findFreeServo();
+  if (servoIndex < 0) {
+    return false; // No free slots
   }
-  Servo_wait_till_no_action();
-  ET2 = 0;
-  __idata uint8_t listRCAP2LimitCache = listRCAP2Limit;
-  for (__idata uint8_t i = pinIndex; i < listRCAP2LimitCache - 1; i++) {
-    servoPin[i] = servoPin[i + 1];
-    listRCAP2[i] = listRCAP2[i + 1];
-  }
-  listRCAP2LimitCache--;
-  listRCAP2Limit = listRCAP2LimitCache;
-  ET2 = 1;
+  
+  // Configure pin
+  pinMode(pin, OUTPUT);
+  
+  // Store servo data
+  servos[servoIndex].pin = pin;
+  servos[servoIndex].pulseWidth = DEFAULT_PULSE_WIDTH;
+  servos[servoIndex].minPulse = minPulse;
+  servos[servoIndex].maxPulse = maxPulse;
+  servos[servoIndex].attached = true;
+  
+  // Move to default position (90 degrees)
+  generatePulse(pin, DEFAULT_PULSE_WIDTH);
+  
   return true;
 }
 
-bool Servo_writeMicroseconds(uint8_t pin, __xdata uint16_t pulseUs) {
-  __idata uint8_t pinIndex = Servo_search_pin(pin);
-  if (pinIndex == 0) {
-    return false;
+// Detach servo
+void Servo_detach(uint8_t pin) {
+  int servoIndex = findServoByPin(pin);
+  if (servoIndex >= 0) {
+    servos[servoIndex].attached = false;
   }
-  __idata uint16_t value = (65536 - ((F_CPU / 1000000) * pulseUs));
-  ET2 = 0;
-  listRCAP2[pinIndex] = value;
-  ET2 = 1;
-  return true;
 }
 
-bool Servo_write(uint8_t pin, __xdata int16_t value) {
-  __idata uint8_t pinIndex = Servo_search_pin(pin);
-  __idata uint16_t pulseValue;
-  if (pinIndex == 0) {
-    return false;
-  }
-  if (value <= 200) {
-    // value is angle when value <= 200
-    if (value < 0) {
-      value = 0;
-    }
-    if (value > 180) {
-      value = 180;
-    }
-    uint16_t pulseUs =
-        Servo_min + ((Servo_max - Servo_min) * ((uint32_t)value)) / 180;
-    pulseValue = (65536 - ((F_CPU / 1000000) * (pulseUs)));
-  } else {
-    // value is pulseUs when value > 200
-    pulseValue = (65536 - ((F_CPU / 1000000) * value));
-  }
-  ET2 = 0;
-  listRCAP2[pinIndex] = pulseValue;
-  ET2 = 1;
-  return true;
+// Write angle (0-180 degrees)
+void Servo_write(uint8_t pin, int angle) {
+  int servoIndex = findServoByPin(pin);
+  if (servoIndex < 0) return;
+  
+  // Constrain angle to valid range
+  if (angle < 0) angle = 0;
+  if (angle > 180) angle = 180;
+  
+  // Convert angle to pulse width using this servo's custom range
+  uint16_t pulseWidth = map(angle, 0, 180, servos[servoIndex].minPulse, servos[servoIndex].maxPulse);
+  
+  // Store pulse width
+  servos[servoIndex].pulseWidth = pulseWidth;
+  
+  // Generate pulses
+  generatePulse(pin, pulseWidth);
+}
+
+// Write pulse width in microseconds
+void Servo_writeMicroseconds(uint8_t pin, uint16_t pulseWidth) {
+  int servoIndex = findServoByPin(pin);
+  if (servoIndex < 0) return;
+  
+  // Constrain pulse width to this servo's valid range
+  if (pulseWidth < servos[servoIndex].minPulse) pulseWidth = servos[servoIndex].minPulse;
+  if (pulseWidth > servos[servoIndex].maxPulse) pulseWidth = servos[servoIndex].maxPulse;
+  
+  // Store pulse width
+  servos[servoIndex].pulseWidth = pulseWidth;
+  
+  // Generate pulses
+  generatePulse(pin, pulseWidth);
+}
+
+// Check if servo is attached
+bool Servo_attached(uint8_t pin) {
+  return (findServoByPin(pin) >= 0);
 }
