@@ -31,4 +31,4 @@ build-*/
 site/
 # ignore my scratch directory
 notes/
-#.DS_Store
+.DS_Store
