@@ -2,7 +2,7 @@
 
 This example demonstrates how to control multiple standard hobby servo motors using the Johnny552 board's PWM capabilities. The servos will cycle through various positions (0°, 90°, 180°), showing how to use the custom Servo library with the Johnny552 board.
 
-![Servo Test in Action](servo_test.gif)
+![Servo Test in Action](servos.gif)
 
 ## Hardware Requirements
 
